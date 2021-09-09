@@ -5,14 +5,13 @@ const userRouter = require('./routes/userRoutes');
 const app = express();
 
 
-app.get('/',(req,res)=>{
-  res.status(200).send('hello');
-});
+// app.get('/',(req,res)=>{
+//   res.status(200).send('hello');
+// });
 // 1) MIDDLEWARES
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-
 
 
 app.use(express.json());

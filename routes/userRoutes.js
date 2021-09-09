@@ -6,8 +6,22 @@ router
   .route('/')
   .get(userController.getAllUsers)
   .post(userController.createUser)
-  // .patch(userController.addExam);
+  .patch(userController.submitExam)
+  .delete(userController.deleteUsers);
+
+router
+  .route('/exam/:id')
+  .get(userController.getExamsScores)
+  .patch(userController.submitExam);
+
+router
+  .route('/assignment/:id')
+  .get(userController.getAssignmentsScores)
+  .patch(userController.submitAssignment);      
+  
 router
   .route('/:name')
   .get(userController.getUserByName);
-  module.exports = router;
+
+
+module.exports = router;

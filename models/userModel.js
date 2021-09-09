@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const mongoose = require('mongoose');
-// const validator = require('validator');
+const validator = require('validator');
 // const bcrypt = require('bcryptjs');
 // const { Session } = require('inspector');
 // const { stringify } = require('querystring');
@@ -8,18 +8,18 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'Please enter user\'\s name']
+    required: [true, 'Please enter user name']
   },
   email: {
     type: String,
     required: [true, 'Please enter user email'],
     unique: true,
     lowercase: true,
-    // validate: [validator.isEmail, 'Please provide a valid email']
+    validate: [validator.isEmail, 'Please provide a valid email']
   },
   phoneNumber:{
     type: String,
-    required: [true,'Please provide your phone number']
+    required: [true,'Please provide user phone number']
   },
   photo: {
     type: String,
@@ -72,20 +72,41 @@ const userSchema = new mongoose.Schema({
     {
       category:{
       type: String,
-      required: true
       },
       branch:{
       type: String,
       enum: ['Algebra', 'Calculas', 'Geometry','Mechanics'],
-      required: true
       },
       score:{
           type: Number,
-          required: true
       },
       maxScore:{
           type: Number,
-          required: true
+      },
+      pdf:{
+        type: String
+      }
+    }
+  ],
+  assignments:[
+    {
+      category:{
+      type: String,
+      },
+      branch:{
+      type: String,
+      enum: ['Algebra', 'Calculas', 'Geometry','Mechanics'],
+      },
+      score:{
+          type: Number,
+  
+      },
+      maxScore:{
+          type: Number,
+  
+      },
+      pdf:{
+        type:String
       }
     }
   ]
