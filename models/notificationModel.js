@@ -2,11 +2,17 @@ const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema(
     {
-        name: {
+        content: {
             type: String,
-            required: [true, 'A notification must have a text'],
+            required: [true, 'A notification must have a content'],
             trim: true,
         },
+        createdAt: {
+            type: Date,
+            default: Date.now(),
+            select: false
+        },
+
     },
 );
 

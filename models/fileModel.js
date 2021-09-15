@@ -36,7 +36,7 @@ const fileSchema = new mongoose.Schema(
             type: String,
             required: [true, 'A file must belong to a category'],
             enum: {
-                values: ['revision', 'model_answer'],
+                values: ['revision', 'model_answer', 'notes'],
                 message: 'Category is either: revision, model answer'
             }
         },

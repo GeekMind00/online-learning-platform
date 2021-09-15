@@ -3,7 +3,7 @@ const factory = require('./handlerFactory');
 
 
 exports.getAllFiles = factory.getAll(File);
-exports.getFile = factory.getOne(File, { path: 'reviews' });
+exports.getFile = factory.getOne(File);
 exports.createFile = factory.createOne(File);
 exports.updateFile = factory.updateOne(File);
 exports.deleteFile = factory.deleteOne(File);
