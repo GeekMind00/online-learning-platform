@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
 const catchAsync = require('./../utils/catchAsync');
+const mongoose = require('mongoose');
+
+const ObjectId = mongoose.Types.ObjectId;
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
     const users = await User.find();
@@ -49,7 +52,7 @@ exports.getUser = async (req,res)=>{
     }
 }
 
-exports.deleteUser = async (req,res)=>{
+exports.deleteUser = async (req,res)=> {
     try{
         const id = req.params.id
         await User.findByIdAndDelete(id);
@@ -64,35 +67,10 @@ exports.deleteUser = async (req,res)=>{
     }
 }
 
-// exports.signUp = async (req,res)=>{
-
-//     try{
-//         const newUser = await User.create(req.body);
-//         const token = jwt.sign({ id: newUser._id},process.env.JWT_SECRET,{
-//             expiresIn: process.env.JWT_EXPIRES_IN
-//         });
-
-//         res.status(201).json({
-//             status:'success',
-//             // results: users.length,
-//             data: {
-//                 user   
-//             }
-//         });
-//     } catch (err){
-//         res.status(404).json({
-//             status: 'fail',
-//             message: err
-//         });
-//     }
-// }
-
 exports.submitFile = async (req,res)=>{
-    // console.log(1);
     try{
         let file = req.body
-        const id = req.params.id
-        await User.findByIdAndUpdate(id, {$push:{files:file}})
+        await User.findByIdAndUpdate(req.user.id, {$push:{files:file}})
 
         res.status(201).json({
             status:'success',
@@ -107,18 +85,22 @@ exports.submitFile = async (req,res)=>{
 }
 
 
-
 exports.getScores = async (req,res)=>{
     try{
-        const id = req.params.id;
-        const fileType = req.params.fileType;
-        const files = await User.aggregate([{
+        let id = ObjectId(req.user.id)          
+        const fileType = req.params.type;
+        const files = await User.aggregate([
+        {
+            $match:{
+                "_id":id
+            }
+        },{
             $unwind: {
                 path: "$files"
             }
         }, {
             $match: {
-                "files.fileType": fileType
+                "files.type": fileType
             }
         }, {
             $group: {
@@ -127,11 +109,13 @@ exports.getScores = async (req,res)=>{
                     $push: "$files"
                 }
             }
-        }]);
-            
+        
+    }
+    ]);
+    
         let totalScore = 0;
         let totalMaxScore = 0;
-        
+
         for (let file of files[0].files){
             if(typeof(file.score)!= "undefined")
              {totalScore +=file.score

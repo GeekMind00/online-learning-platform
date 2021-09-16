@@ -8,14 +8,17 @@ router.post('/addUser', authController.addUser);
 router.post('/login', authController.login);
 // router.get('/logout', authController.logout);
 
-// router.post('/forgotPassword', authController.forgotPassword);
-// router.patch('/resetPassword/:token', authController.resetPassword);
+router.post('/forgotPassword', authController.forgotPassword);
+router.patch('/resetPassword/:token', authController.resetPassword);
+
 
 router.use(authController.protect);
 
-router.post('/:id', userController.submitFile);
+router.patch('/updateMyPassword', authController.updatePassword);
 
-router.route('/:id&:fileType').get(userController.getScores);
+router.post('/', userController.submitFile);
+
+router.get('/:type',userController.getScores);
 
 router.use(authController.restrictTo('admin'));
 
