@@ -6,6 +6,8 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const hpp = require('hpp')
+const fileRouter = require('./routes/fileRoutes');
+const notificationRouter = require('./routes/notificationRoutes');
 
 const app = express();
 
@@ -37,5 +39,7 @@ app.use(hpp());
 app.use(express.static(`${__dirname}/public`));
 
 app.use('/user', userRouter);
+app.use('/api/v1/files', fileRouter);
+app.use('/api/v1/notifications', notificationRouter);
 
 module.exports = app;
