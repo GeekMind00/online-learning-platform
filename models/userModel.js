@@ -27,8 +27,8 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['student', 'admin', 'moderator'],
-    default: 'student'
+    enum: ['Student', 'Admin', 'Moderator'],
+    default: 'Student'
   },
   password: {
     type: String,
@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
   },
   grade: {
     type: String,
-    enum: ['first', 'second']
+    enum: ['First', 'Second']
     // required: [true,'Please provide your current grade']
   },
   center: {
@@ -101,6 +101,12 @@ const userSchema = new mongoose.Schema({
   passwordResetExpires: Date,
   // active: {
   //   type: Boolean,
+  
+  __v:{
+      type:Number,
+      select:false
+  }
+  
   //   default: true,
   //   select: false
   // }
