@@ -27,9 +27,9 @@ const limiter = rateLimit({
   windowMs: 60 * 60 * 1000,
   message: 'Too many requests from this IP, please try again in an hour'
 });
-app.use('/',limiter);
+app.use('/', limiter);
 
-app.use(express.json({limit: '10kb'}));
+app.use(express.json({ limit: '10kb' }));
 
 app.use(mongoSanitize());
 
@@ -40,8 +40,8 @@ app.use(hpp());
 // app.use(express.static(path.join(__dirname,'osos-website/dist/osos-website')));
 
 app.use('/user', userRouter);
-app.use('/api/v1/files', fileRouter);
-app.use('/api/v1/notifications', notificationRouter);
+app.use('/files', fileRouter);
+app.use('/notifications', notificationRouter);
 
 // app.get('*', (req, res) => {
 //   res.sendFile(path.join(__dirname,'osos-website/dist/osos-website/index.html'));

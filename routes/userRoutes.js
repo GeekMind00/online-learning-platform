@@ -4,9 +4,10 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
+router.get('/:branch&:type', userController.getFiles);
 router.post('/addUser', userController.addUser);
 router.post('/login', authController.login);
-router.route('/logout').get( authController.logout);
+router.route('/logout').get(authController.logout);
 
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
@@ -18,26 +19,26 @@ router.patch('/updateMyPassword', authController.updatePassword);
 router.post('/', userController.submitFile);
 
 
-router.get('/scores/:type',userController.getScores);
+router.get('/scores/:type', userController.getScores);
 
-router.get('/role',userController.getUserRole);
+router.get('/role', userController.getUserRole);
 
 router.use(authController.restrictTo('admin'));
 
 router
-.route('/')
-.delete(userController.deleteUsers);
+    .route('/')
+    .delete(userController.deleteUsers);
 
 router
-.route('/:id')
-.patch(userController.updateUser)
-.delete(userController.deleteUser);
+    .route('/:id')
+    .patch(userController.updateUser)
+    .delete(userController.deleteUser);
 
-router.use(authController.restrictTo('admin','moderator'));
+router.use(authController.restrictTo('admin', 'moderator'));
 
 router
-.route('/')
-.get(userController.getAllUsers)
+    .route('/')
+    .get(userController.getAllUsers)
 
 router.route('/info/:id').get(userController.getUser);
 
