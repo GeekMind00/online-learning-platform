@@ -10,7 +10,7 @@ router.get('/logout',authController.logout);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
-// router.use(authController.protect);
+router.use(authController.protect);
 
 router.get('/:branch&:type', userController.getFiles);
 
@@ -47,7 +47,7 @@ router
 
 router.route('/info/:id').get(userController.getUser);
 
-router.route('/:id&:fileId').patch(userController.review);
+router.route('/review/:id').patch(userController.review);
 
     // router.route('/:name').get(userController.getUserByName);
     

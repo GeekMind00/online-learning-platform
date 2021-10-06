@@ -9,7 +9,7 @@
 const signToken = (id, rememberMe) => {
     let tokenExpirationDate;
     if (rememberMe) tokenExpirationDate = "90d";
-    else tokenExpirationDate = "1d"
+    else tokenExpirationDate = "3d"
     return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: tokenExpirationDate
     });

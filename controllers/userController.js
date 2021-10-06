@@ -140,7 +140,6 @@ exports.submitFile = async (req, res) => {
 
 exports.getScores = async (req, res) => {
     try {
-        console.log(req.params)
         let id = ObjectId(req.params.id)
         const fileType = req.params.type;
         const files = await User.aggregate([
@@ -148,7 +147,7 @@ exports.getScores = async (req, res) => {
                 $match: {
                     "_id": id
                 }
-            }, {
+             }, {
                 $unwind: {
                     path: "$files"
                 }
@@ -176,7 +175,6 @@ exports.getScores = async (req, res) => {
         //         totalMaxScore += file.maxScore
         //     }
         // }
-        console.log(files[0].files)
         res.status(200).json({
             status: 'success',
             data: {
@@ -196,25 +194,11 @@ exports.getScores = async (req, res) => {
 exports.review = async (req, res) => {
     try {
         const id = req.params.id;
-        const fileId = req.params.fileId;
-        const file = await User.findOne(
-            {
-                '_id': id
-            },
-            {
-                "files": {
-                    "$elemMatch": {
-                        "_id": fileId
-                    }
-                }
-            });
-        file.files[0].score = req.body.score
-        file.files[0].maxScore = req.body.maxScore
+        await User.findOneAndUpdate({_id:id, files :{$elemMatch: {_id:req.body._id}}},{$set:{'files.$.score':parseFloat(req.body.score),'files.$.maxScore':parseFloat(req.body.maxScore)}})
+
         res.status(200).json({
             status: 'success',
-            data: {
-                file
-            }
+
         });
     }
     catch (err) {
@@ -281,7 +265,6 @@ exports.getFiles = catchAsync(async (req, res, next) => {
         }
     ]);
     // SEND RESPONSE
-    console.log(files)
     res.status(200).json({
         status: 'success',
         data: {
@@ -298,7 +281,6 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
     else{
         req.user.grade = req.params.grade
     }
-    console.log(req.user.grade)
     const files = await User.aggregate([
         { 
             $match:{
