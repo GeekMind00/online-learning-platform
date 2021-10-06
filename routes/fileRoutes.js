@@ -3,6 +3,10 @@ const fileController = require('./../controllers/fileController');
 
 const router = express.Router();
 
+router.route('/assignments').get(fileController.getAssignments);
+router.route('/quizzes').get(fileController.getQuizzes);
+
+
 router
     .route('/')
     .get(fileController.getAllFiles)
