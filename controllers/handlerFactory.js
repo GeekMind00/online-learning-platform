@@ -17,6 +17,7 @@ exports.deleteOne = Model =>
 
 exports.updateOne = Model =>
     catchAsync(async (req, res, next) => {
+        if (req.file) req.body.photo = req.file.filename
         const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
             new: true,
             runValidators: true
@@ -31,9 +32,9 @@ exports.updateOne = Model =>
             data: {
                 data: doc
             }
+
         });
     });
-
 exports.createOne = Model =>
     catchAsync(async (req, res, next) => {
         const doc = await Model.create(req.body);
@@ -48,7 +49,6 @@ exports.createOne = Model =>
 
 exports.getOne = (Model) =>
     catchAsync(async (req, res, next) => {
-        console.log(1)
         let query = Model.findById(req.params.id);
         const doc = await query;
       

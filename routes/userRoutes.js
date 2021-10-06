@@ -4,46 +4,51 @@ const authController = require('./../controllers/authController');
 
 const router = express.Router();
 
-router.get('/:branch&:type', userController.getFiles);
-router.post('/addUser', userController.addUser);
 router.post('/login', authController.login);
-router.route('/logout').get(authController.logout);
+router.get('/logout',authController.logout);
 
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
-router.use(authController.protect);
+// router.use(authController.protect);
+
+router.get('/:branch&:type', userController.getFiles);
 
 router.patch('/updateMyPassword', authController.updatePassword);
 
 router.post('/', userController.submitFile);
 
+router.get('/scores/:id&:type', userController.getScores);
 
-router.get('/scores/:type', userController.getScores);
+router.get('/excellentStudents/:grade',userController.excellentStudents)
 
 router.get('/role', userController.getUserRole);
 
-router.use(authController.restrictTo('admin'));
+// router.use(authController.restrictTo('Admin'));
 
+router.patch('/comment',userController.addComment)
+
+router.post('/addUser', userController.addUser);
 router
     .route('/')
     .delete(userController.deleteUsers);
 
+    // userController.uploadUserPhoto,
 router
-    .route('/:id')
-    .patch(userController.updateUser)
+.route('/:id') 
+.patch(userController.uploadUserPhoto,userController.resizeUserPhoto,userController.updateUser)
     .delete(userController.deleteUser);
-
-router.use(authController.restrictTo('admin', 'moderator'));
+    
+// router.use(authController.restrictTo('Admin', 'Moderator'));
 
 router
-    .route('/')
-    .get(userController.getAllUsers)
+.route('/:grade')
+.get(userController.getAllUsers)
 
 router.route('/info/:id').get(userController.getUser);
 
 router.route('/:id&:fileId').patch(userController.review);
 
-router.route('/:name').get(userController.getUserByName);
-
+    // router.route('/:name').get(userController.getUserByName);
+    
 module.exports = router;
