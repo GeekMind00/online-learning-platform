@@ -8,14 +8,6 @@ const fileSchema = new mongoose.Schema(
             unique: true,
             trim: true,
         },
-        type: {
-            type: String,
-            required: [true, 'A file must have a type'],
-            enum: {
-                values: ['video', 'file'],
-                message: 'Type is either: video, file'
-            }
-        },
         grade: {
             type: String,
             required: [true, 'A file must belong to a grade'],
@@ -36,7 +28,7 @@ const fileSchema = new mongoose.Schema(
             type: String,
             required: [true, 'A file must belong to a category'],
             enum: {
-                values: ['revision', 'model_answer', 'note', 'quiz', 'assignment'],
+                values: ['video', 'exam', 'assignment'],
                 message: 'Category is either: revision, model answer'
             }
         },
@@ -44,6 +36,20 @@ const fileSchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
+        files: [
+            {
+                name: {
+                    type: String,
+                    required: [true, 'A file must have a name'],
+                    unique: true,
+                    trim: true,
+                },
+                path: {
+                    type: String,
+                    trim: true,
+                },
+            }
+        ],
     },
 );
 

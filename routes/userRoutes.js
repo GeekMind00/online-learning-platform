@@ -10,7 +10,7 @@ router.get('/logout',authController.logout);
 router.post('/forgotPassword', authController.forgotPassword);
 router.patch('/resetPassword/:token', authController.resetPassword);
 
-router.use(authController.protect);
+// router.use(authController.protect);
 
 router.get('/:branch&:type', userController.getFiles);
 
@@ -24,9 +24,13 @@ router.get('/excellentStudents/:grade',userController.excellentStudents)
 
 router.get('/role', userController.getUserRole);
 
+<<<<<<< Updated upstream
 // router.use(authController.restrictTo('Admin'));
 
 router.patch('/comment',userController.addComment)
+=======
+// router.use(authController.restrictTo('admin'));
+>>>>>>> Stashed changes
 
 router.post('/addUser', userController.addUser);
 router
@@ -38,8 +42,13 @@ router
 .route('/:id') 
 .patch(userController.uploadUserPhoto,userController.resizeUserPhoto,userController.updateUser)
     .delete(userController.deleteUser);
+<<<<<<< Updated upstream
     
 // router.use(authController.restrictTo('Admin', 'Moderator'));
+=======
+
+// router.use(authController.restrictTo('admin', 'moderator'));
+>>>>>>> Stashed changes
 
 router
 .route('/:grade')

@@ -2,10 +2,21 @@ const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema(
     {
-        content: {
+        type: {
             type: String,
-            required: [true, 'A notification must have a content'],
-            trim: true,
+            required: [true, 'A file must have a type'],
+            enum: {
+                values: ['video', 'exam', 'assignment'],
+                message: 'Type is either: video, exam, or assignment'
+            }
+        },
+        branch: {
+            type: String,
+            required: [true, 'A file must belong to a branch'],
+            enum: {
+                values: ['algebra', 'mechanics', 'calculus', 'geometry'],
+                message: 'Branch is either: algebra, mechanics, calculus, geometry'
+            }
         },
         createdAt: {
             type: Date,
