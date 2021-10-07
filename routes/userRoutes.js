@@ -24,7 +24,7 @@ router.get('/excellentStudents/:grade', userController.excellentStudents)
 
 router.get('/role', userController.getUserRole);
 
-// router.use(authController.restrictTo('Admin'));
+router.use(authController.restrictTo('Admin'));
 
 router.patch('/comment', userController.addComment)
 
@@ -33,13 +33,12 @@ router
     .route('/')
     .delete(userController.deleteUsers);
 
-// userController.uploadUserPhoto,
 router
     .route('/:id')
     .patch(userController.uploadUserPhoto, userController.resizeUserPhoto, userController.updateUser)
     .delete(userController.deleteUser);
 
-// router.use(authController.restrictTo('Admin', 'Moderator'));
+router.use(authController.restrictTo('Admin', 'Moderator'));
 
 router
     .route('/:grade')
@@ -48,7 +47,5 @@ router
 router.route('/info/:id').get(userController.getUser);
 
 router.route('/review/:id').patch(userController.review);
-
-// router.route('/:name').get(userController.getUserByName);
 
 module.exports = router;

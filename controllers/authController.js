@@ -116,7 +116,8 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     // GRANT ACCESS TO PROTECTED ROUTE
     req.user = currentUser;
-    if (req.params.grade == "undefined")
+    console.log(req.params)
+    if (req.params.grade == undefined)
         req.user.grade = "First"
     else if (req.params.grade == "Second")
         req.user.grade = "Second"

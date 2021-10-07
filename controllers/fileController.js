@@ -19,8 +19,9 @@ exports.getAssignments = catchAsync(async (req, res, next) => {
     });
 });
 exports.getQuizzes = catchAsync(async (req, res, next) => {
+    console.log(req.params)
     const doc = await File.find({ category: 'exams', branch: req.params.branch, grade: req.user.grade });
-
+    console.log(req.user.grade)
     // SEND RESPONSE
     res.status(200).json({
         status: 'success',
