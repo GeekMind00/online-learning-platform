@@ -12,7 +12,7 @@ const fileSchema = new mongoose.Schema(
             type: String,
             required: [true, 'A file must belong to a grade'],
             enum: {
-                values: ['first', 'second'],
+                values: ['First', 'Second'],
                 message: 'Grade is either: first, second'
             }
         },
@@ -28,8 +28,8 @@ const fileSchema = new mongoose.Schema(
             type: String,
             required: [true, 'A file must belong to a category'],
             enum: {
-                values: ['video', 'exam', 'assignment'],
-                message: 'Category is either: revision, model answer'
+                values: ['videos', 'exams', 'assignments'],
+                message: 'Category is either: videos, exams, or assignments'
             }
         },
         path: {

@@ -3,9 +3,11 @@ const Notification = require('../models/notificationModel');
 const catchAsync = require('../utils/catchAsync');
 const notificationController = require('../controllers/notificationController');
 const factory = require('./handlerFactory');
+const authController = require('./../controllers/authController');
+
 
 exports.getAssignments = catchAsync(async (req, res, next) => {
-    const doc = await File.find({ category: 'assignment', branch: req.params.branch, grade: req.params.grade });
+    const doc = await File.find({ category: 'assignments', branch: req.params.branch, grade: req.user.grade });
 
     // SEND RESPONSE
     res.status(200).json({
@@ -17,7 +19,7 @@ exports.getAssignments = catchAsync(async (req, res, next) => {
     });
 });
 exports.getQuizzes = catchAsync(async (req, res, next) => {
-    const doc = await File.find({ category: 'exam', branch: req.params.branch, grade: req.params.grade });
+    const doc = await File.find({ category: 'exams', branch: req.params.branch, grade: req.user.grade });
 
     // SEND RESPONSE
     res.status(200).json({
@@ -29,7 +31,7 @@ exports.getQuizzes = catchAsync(async (req, res, next) => {
     });
 });
 exports.getVideos = catchAsync(async (req, res, next) => {
-    const doc = await File.find({ category: 'video', branch: req.params.branch, grade: req.params.grade });
+    const doc = await File.find({ category: 'videos', branch: req.params.branch, grade: req.user.grade });
 
     // SEND RESPONSE
     res.status(200).json({

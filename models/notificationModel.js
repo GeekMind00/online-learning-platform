@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 
 const notificationSchema = new mongoose.Schema(
     {
-        type: {
+        category: {
             type: String,
             required: [true, 'A file must have a type'],
             enum: {
-                values: ['video', 'exam', 'assignment'],
-                message: 'Type is either: video, exam, or assignment'
+                values: ['videos', 'exams', 'assignments'],
+                message: 'Category is either: videos, exams, or assignments'
             }
         },
         branch: {
@@ -21,7 +21,6 @@ const notificationSchema = new mongoose.Schema(
         createdAt: {
             type: Date,
             default: Date.now(),
-            select: false
         },
 
     },
