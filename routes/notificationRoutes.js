@@ -6,9 +6,6 @@ const router = express.Router();
 router
     .route('/')
     .get(notificationController.getAllNotifications)
-    .post(
-        notificationController.createNotification
-    );
 
 router
     .route('/:id')

@@ -64,14 +64,14 @@ const userSchema = new mongoose.Schema({
     {
       type: {
         type: String,
-        enum: ['exam', 'assignment']
+        enum: ['exams', 'assignments']
       },
       category: {
         type: String
       },
       branch: {
         type: String,
-        enum: ['Algebra', 'Calculus', 'Geometry', 'Mechanics']
+        enum: ['algebra', 'calculus', 'geometry', 'mechanics']
       },
       score: {
         type: Number,
@@ -96,8 +96,8 @@ const userSchema = new mongoose.Schema({
       }
     }
   ],
-  comment:{
-    type:String
+  comment: {
+    type: String
   },
   passwordChangedAt: Date,
   passwordResetToken: String,

@@ -1,11 +1,15 @@
 const Notification = require('../models/notificationModel');
+const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
-const catchAsync = require('./../utils/catchAsync');
 
+exports.createNotification = catchAsync(async (req, next) => {
 
-
-// exports.getAllNotifications = factory.getAll(Notification);
-exports.createNotification = factory.createOne(Notification);
+    const notification = await Notification.create({
+        "category": req.body.category,
+        "branch": req.body.branch
+    });
+    next();
+});
 exports.deleteNotification = factory.deleteOne(Notification);
 
 exports.getAllNotifications = catchAsync(async (req, res, next) => {

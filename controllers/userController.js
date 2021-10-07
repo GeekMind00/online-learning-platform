@@ -4,7 +4,8 @@ const catchAsync = require('./../utils/catchAsync');
 const mongoose = require('mongoose');
 const factory = require('./handlerFactory');
 const multer = require('multer');
-const sharp = require('sharp')
+const sharp = require('sharp');
+const authController = require('./../controllers/authController');
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -20,11 +21,11 @@ const ObjectId = mongoose.Types.ObjectId;
 
 const multerStorage = multer.memoryStorage();
 
-const multerFilter = (req,file,cb) => {
+const multerFilter = (req, file, cb) => {
     if (file.mimetype.startsWith('image')) {
         cb(null, true)
     } else {
-        cb (new AppError ('Not an image! Please upload only images',400),false)
+        cb(new AppError('Not an image! Please upload only images', 400), false)
     }
 }
 
@@ -38,15 +39,15 @@ exports.uploadUserPhoto = upload.single('photo')
 exports.resizeUserPhoto = (req, res, next) => {
     if (!req.file) return next();
 
-    req.file.filename = `user-${req.params.id}-${Date.now()}.jpeg`; 
+    req.file.filename = `user-${req.params.id}-${Date.now()}.jpeg`;
 
     sharp(req.file.buffer)
-        .resize(250,250)
+        .resize(250, 250)
         .toFormat('jpeg')
-        .jpeg({quality:90})
+        .jpeg({ quality: 90 })
         .toFile(`public/${req.file.filename}`);
 
-    next();    
+    next();
 };
 // exports.getAllUsers = factory.getAll(User);
 // exports.getUser = factory.getOne(User);
@@ -75,7 +76,7 @@ exports.addUser = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-    const users = await User.find({grade:req.params.grade}).or([{ role: 'Student' }, { role: 'Moderator' }]).select('name');
+    const users = await User.find({ grade: req.params.grade }).or([{ role: 'Student' }, { role: 'Moderator' }]).select('name');
 
     res.status(200).json({
         status: 'success',
@@ -147,7 +148,7 @@ exports.getScores = async (req, res) => {
                 $match: {
                     "_id": id
                 }
-             }, {
+            }, {
                 $unwind: {
                     path: "$files"
                 }
@@ -194,7 +195,7 @@ exports.getScores = async (req, res) => {
 exports.review = async (req, res) => {
     try {
         const id = req.params.id;
-        await User.findOneAndUpdate({_id:id, files :{$elemMatch: {_id:req.body._id}}},{$set:{'files.$.score':parseFloat(req.body.score),'files.$.maxScore':parseFloat(req.body.maxScore)}})
+        await User.findOneAndUpdate({ _id: id, files: { $elemMatch: { _id: req.body._id } } }, { $set: { 'files.$.score': parseFloat(req.body.score), 'files.$.maxScore': parseFloat(req.body.maxScore) } })
 
         res.status(200).json({
             status: 'success',
@@ -274,18 +275,11 @@ exports.getFiles = catchAsync(async (req, res, next) => {
 });
 
 exports.excellentStudents = catchAsync(async (req, res, next) => {
-
-    if(req.params.grade == "undefined" || req.params.grade == null){
-        req.user.grade = "First"
-    }
-    else{
-        req.user.grade = req.params.grade
-    }
     const files = await User.aggregate([
-        { 
-            $match:{
-                "role":"Student",
-                "grade":req.user.grade
+        {
+            $match: {
+                "role": "Student",
+                "grade": req.user.grade
             }
         },
         {
@@ -305,20 +299,18 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
             }
         }
     ]);
-    
+
     let lastExams = []
     let currentExam = 0
-    for (exams of files){
+    for (exams of files) {
         let lastIndex = -1;
-        for(exam of exams.files){
-            if (exam.category.includes('exam'))
-                {
-                    lastIndex = exams.files.indexOf(exam)
-                    currentExam = Math.max(parseInt(exam.category[(exam.category.indexOf('exam') + 5)]),currentExam)
-                } 
+        for (exam of exams.files) {
+            if (exam.category.includes('exam')) {
+                lastIndex = exams.files.indexOf(exam)
+                currentExam = Math.max(parseInt(exam.category[(exam.category.indexOf('exam') + 5)]), currentExam)
+            }
         }
-        if (lastIndex != -1)
-        {
+        if (lastIndex != -1) {
             lastExams.push(lastIndex)
         }
     }
@@ -330,32 +322,29 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
     let totalScores = []
     let topStudents = []
 
-    if (lastExams.length !=0 )
-    {
-        for (let exams = 0; exams<files.length; exams++){
-            for (let cnt = 0; cnt < 12 && cnt< files[exams].files.length; cnt++){
+    if (lastExams.length != 0) {
+        for (let exams = 0; exams < files.length; exams++) {
+            for (let cnt = 0; cnt < 12 && cnt < files[exams].files.length; cnt++) {
                 file = files[exams].files[lastExams[exams] - cnt]
-                
-                if (file.score != null && file.maxScore!=null){
-                    if (file.category.includes('exam') && parseInt(file.category[5]) == currentExam )
-                    {
-                        examsScores+=file.score
-                        examsMaxScores+=file.maxScore
+
+                if (file.score != null && file.maxScore != null) {
+                    if (file.category.includes('exam') && parseInt(file.category[5]) == currentExam) {
+                        examsScores += file.score
+                        examsMaxScores += file.maxScore
                     }
-                    else if (file.category.includes('quiz') && (parseInt(file.category[4]) == currentExam*2 || parseInt(file.category[4]) == currentExam*2 - 1))
-                    {
-                        quizzesScores+=file.score
-                        quizzesMaxScores+=file.maxScore
+                    else if (file.category.includes('quiz') && (parseInt(file.category[4]) == currentExam * 2 || parseInt(file.category[4]) == currentExam * 2 - 1)) {
+                        quizzesScores += file.score
+                        quizzesMaxScores += file.maxScore
                     }
                 }
             }
             totalScores.push({
-                id:files[exams]._id,
-                examScores:examsScores,
-                examMaxScores:examsMaxScores,
-                quizzesScores:quizzesScores,
-                quizzesMaxScores:quizzesMaxScores,
-                total:examsScores + quizzesScores,
+                id: files[exams]._id,
+                examScores: examsScores,
+                examMaxScores: examsMaxScores,
+                quizzesScores: quizzesScores,
+                quizzesMaxScores: quizzesMaxScores,
+                total: examsScores + quizzesScores,
                 maxTotal: examsMaxScores + quizzesMaxScores
             })
 
@@ -364,38 +353,38 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
             quizzesScores = 0;
             quizzesMaxScores = 0;
         }
-        totalScores.sort(function (scores1,scores2) {
-                return scores2.total - scores1.total 
-            })
-        
-        first = await User.findOne({_id:totalScores[0].id}).select('name photo comment')
-        second = await User.findOne({_id:totalScores[1].id}).select('name photo comment')
+        totalScores.sort(function (scores1, scores2) {
+            return scores2.total - scores1.total
+        })
+
+        first = await User.findOne({ _id: totalScores[0].id }).select('name photo comment')
+        second = await User.findOne({ _id: totalScores[1].id }).select('name photo comment')
         topStudents.push(
             {
-                name:first.name,
-                photo:first.photo,
-                comment:first.comment,
-                scores:totalScores[0]
+                name: first.name,
+                photo: first.photo,
+                comment: first.comment,
+                scores: totalScores[0]
             },
             {
-                name:second.name,
-                photo:second.photo,
-                comment:second.comment,
-                scores:totalScores[1]
+                name: second.name,
+                photo: second.photo,
+                comment: second.comment,
+                scores: totalScores[1]
             }
-        ) 
+        )
     }
     res.status(200).json({
-            status: 'success',
-            data: {
-                topStudents 
-            }
-        });
+        status: 'success',
+        data: {
+            topStudents
+        }
+    });
 });
 
-exports.addComment = catchAsync (async (req,res,next) =>{
+exports.addComment = catchAsync(async (req, res, next) => {
 
-    await User.findByIdAndUpdate(req.body.id, {comment: req.body.comment})
+    await User.findByIdAndUpdate(req.body.id, { comment: req.body.comment })
 
     res.status(201).json({
         status: 'success'
