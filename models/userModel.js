@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please provide a password'],
-    minlength: 8,
+    minlength: 4,
     select: false
   },
   passwordConfirm: {
@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
   },
   grade: {
     type: String,
-    enum: ['First', 'Second']
+    enum: ['First', 'Second', '']
     // required: [true,'Please provide your current grade']
   },
   center: {

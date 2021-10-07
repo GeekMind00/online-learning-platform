@@ -67,7 +67,7 @@ exports.getOne = (Model) =>
 exports.getAll = (Model, filter) =>
     catchAsync(async (req, res, next) => {
         const doc = await Model.find(filter);
-
+          
         // SEND RESPONSE
         res.status(200).json({
             status: 'success',
