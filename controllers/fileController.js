@@ -56,6 +56,24 @@ exports.createFile = catchAsync(async (req, res, next) => {
     });
 });
 
+
+exports.addFileToVideo = async (req, res) => {
+    try {
+        let file = req.body
+        await File.findByIdAndUpdate(req.params.id, { $push: { files: file } })
+
+        res.status(201).json({
+            status: 'success',
+            results: file
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err
+        });
+    }
+}
+
 exports.updateFile = factory.updateOne(File);
 exports.deleteFile = factory.deleteOne(File);
 
