@@ -76,6 +76,7 @@ exports.addUser = catchAsync(async (req, res, next) => {
 });
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
+
     const users = await User.find({ grade: req.params.grade }).or([{ role: 'Student' }, { role: 'Moderator' }]).select('name');
 
     res.status(200).json({
@@ -275,6 +276,11 @@ exports.getFiles = catchAsync(async (req, res, next) => {
 });
 
 exports.excellentStudents = catchAsync(async (req, res, next) => {
+
+    if (req.params.grade == "First" || req.params.grade == "undefined")
+     req.user.grade = "First"
+    else 
+     req.user.grade = "Second" 
     const files = await User.aggregate([
         {
             $match: {

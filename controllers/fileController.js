@@ -25,7 +25,12 @@ const s3 = new aws.S3({
 })
 
 
-exports.getAssignments = catchAsync(async(req, res, next) => {
+exports.getAssignments = catchAsync(async (req, res, next) => {
+    if (req.params.grade == "First" || req.params.grade == "undefined")
+     req.user.grade = "First"
+    else 
+     req.user.grade = "Second"
+
     const doc = await File.find({ category: 'assignments', branch: req.params.branch, grade: req.user.grade });
 
     // SEND RESPONSE
@@ -37,11 +42,14 @@ exports.getAssignments = catchAsync(async(req, res, next) => {
         }
     });
 });
-exports.getQuizzes = catchAsync(async(req, res, next) => {
-    console.log(req.params)
+exports.getQuizzes = catchAsync(async (req, res, next) => {
+    if (req.params.grade == "First" || req.params.grade == "undefined")
+     req.user.grade = "First"
+    else 
+     req.user.grade = "Second"
+
     const doc = await File.find({ category: 'exams', branch: req.params.branch, grade: req.user.grade });
-    console.log(req.user.grade)
-        // SEND RESPONSE
+    // SEND RESPONSE
     res.status(200).json({
         status: 'success',
         // results: doc.length,
@@ -50,7 +58,12 @@ exports.getQuizzes = catchAsync(async(req, res, next) => {
         }
     });
 });
-exports.getVideos = catchAsync(async(req, res, next) => {
+exports.getVideos = catchAsync(async (req, res, next) => {
+    if (req.params.grade == "First" || req.params.grade == "undefined")
+     req.user.grade = "First"
+    else 
+     req.user.grade = "Second"
+
     const doc = await File.find({ category: 'videos', branch: req.params.branch, grade: req.user.grade });
 
     // SEND RESPONSE
