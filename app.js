@@ -19,13 +19,13 @@ app.use(cors())
 app.use(helmet())
 
 if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'));
+    app.use(morgan('dev'));
 }
 
 const limiter = rateLimit({
-  max: 150,
-  windowMs: 60 * 60 * 1000,
-  message: 'Too many requests from this IP, please try again in an hour'
+    max: 150,
+    windowMs: 60 * 60 * 1000,
+    message: 'Too many requests from this IP, please try again in an hour'
 });
 app.use('/', limiter);
 

@@ -23,6 +23,10 @@ router
     );
 
 router
+    .route('/s3Url')
+    .get(fileController.generateUploadURL);
+
+router
     .route('/:id')
     .get(fileController.getFile)
     .post(fileController.addFileToVideo)
@@ -32,5 +36,7 @@ router
     .delete(
         fileController.deleteFile
     );
+
+
 
 module.exports = router;
