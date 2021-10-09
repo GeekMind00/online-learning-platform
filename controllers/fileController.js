@@ -9,27 +9,28 @@ const crypto = require('crypto');
 const util = require("util")
 const randomBytes = util.promisify(crypto.randomBytes)
 const dotenv = require("dotenv");
+const storage = require('./../controllers/storageFactory')
 
-dotenv.config({ path: "./config.env" });
+// dotenv.config({ path: "./config.env" });
 
-const region = "us-east-2"
-const bucketName = "osos-bucket"
-const accessKeyId = process.env.AWS_ACCESS_KEY_ID
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
+// const region = "us-east-2"
+// const bucketName = "osos-bucket"
+// const accessKeyId = process.env.AWS_ACCESS_KEY_ID
+// const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
 
-const s3 = new aws.S3({
-    region,
-    accessKeyId,
-    secretAccessKey,
-    signatureVersion: 'v4'
-})
+// const s3 = new aws.S3({
+//     region,
+//     accessKeyId,
+//     secretAccessKey,
+//     signatureVersion: 'v4'
+// })
 
 
 exports.getAssignments = catchAsync(async (req, res, next) => {
     if (req.params.grade == "First" || req.params.grade == "undefined")
-     req.user.grade = "First"
-    else 
-     req.user.grade = "Second"
+        req.user.grade = "First"
+    else
+        req.user.grade = "Second"
 
     const doc = await File.find({ category: 'assignments', branch: req.params.branch, grade: req.user.grade });
 
@@ -44,9 +45,9 @@ exports.getAssignments = catchAsync(async (req, res, next) => {
 });
 exports.getQuizzes = catchAsync(async (req, res, next) => {
     if (req.params.grade == "First" || req.params.grade == "undefined")
-     req.user.grade = "First"
-    else 
-     req.user.grade = "Second"
+        req.user.grade = "First"
+    else
+        req.user.grade = "Second"
 
     const doc = await File.find({ category: 'exams', branch: req.params.branch, grade: req.user.grade });
     // SEND RESPONSE
@@ -60,9 +61,9 @@ exports.getQuizzes = catchAsync(async (req, res, next) => {
 });
 exports.getVideos = catchAsync(async (req, res, next) => {
     if (req.params.grade == "First" || req.params.grade == "undefined")
-     req.user.grade = "First"
-    else 
-     req.user.grade = "Second"
+        req.user.grade = "First"
+    else
+        req.user.grade = "Second"
 
     const doc = await File.find({ category: 'videos', branch: req.params.branch, grade: req.user.grade });
 
@@ -78,7 +79,8 @@ exports.getVideos = catchAsync(async (req, res, next) => {
 
 exports.getAllFiles = factory.getAll(File, {});
 exports.getFile = factory.getOne(File);
-exports.createFile = catchAsync(async(req, res, next) => {
+exports.createFile = catchAsync(async (req, res, next) => {
+    await storage.uploadFile(req, next);
     const doc = await File.create(req.body);
     notificationController.createNotification(req, next);
     res.status(201).json({
@@ -90,28 +92,21 @@ exports.createFile = catchAsync(async(req, res, next) => {
 });
 
 
-exports.addFileToVideo = async(req, res) => {
-    try {
-        let file = req.body
-        await File.findByIdAndUpdate(req.params.id, { $push: { files: file } })
+exports.addFileToVideo = catchAsync(async (req, res) => {
+    let file = req.body
+    await File.findByIdAndUpdate(req.params.id, { $push: { files: file } })
 
-        res.status(201).json({
-            status: 'success',
-            results: file
-        });
-    } catch (err) {
-        res.status(404).json({
-            status: 'fail',
-            message: err
-        });
-    }
-}
+    res.status(201).json({
+        status: 'success',
+        results: file
+    });
+})
 
 exports.updateFile = factory.updateOne(File);
 exports.deleteFile = factory.deleteOne(File);
 
 exports.generateUploadURL =
-    catchAsync(async(req, res, next) => {
+    catchAsync(async (req, res, next) => {
         const rawBytes = await randomBytes(16)
         const imageName = rawBytes.toString('hex')
 
