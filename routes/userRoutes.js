@@ -24,6 +24,8 @@ router.get('/excellentStudents/:grade', userController.excellentStudents)
 
 router.get('/role', userController.getUserRole);
 
+router.route('/info/:id').get(userController.getUser);
+
 router.use(authController.restrictTo('Admin'));
 
 router.patch('/comment', userController.addComment)
@@ -44,7 +46,6 @@ router
     .route('/:grade')
     .get(userController.getAllUsers)
 
-router.route('/info/:id').get(userController.getUser);
 
 router.route('/review/:id').patch(userController.review);
 

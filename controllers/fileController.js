@@ -21,7 +21,7 @@ const s3 = new aws.S3({
     region,
     accessKeyId,
     secretAccessKey,
-    signatureVersion: 'v4'
+    signatureVersion: 'v2'
 })
 
 
@@ -65,7 +65,6 @@ exports.getVideos = catchAsync(async (req, res, next) => {
      req.user.grade = "Second"
 
     const doc = await File.find({ category: 'videos', branch: req.params.branch, grade: req.user.grade });
-
     // SEND RESPONSE
     res.status(200).json({
         status: 'success',
