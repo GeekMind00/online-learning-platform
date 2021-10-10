@@ -5,7 +5,9 @@ const mongoose = require('mongoose');
 const factory = require('./handlerFactory');
 const multer = require('multer');
 const sharp = require('sharp');
-const authController = require('./../controllers/authController');
+// const authController = require('./../controllers/authController');
+const storage = require('./../controllers/storageFactory')
+const fs = require('fs')
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -19,9 +21,16 @@ const ObjectId = mongoose.Types.ObjectId;
 //     }
 // })
 
-const multerStorage = multer.memoryStorage();
+const multerStorage = multer.diskStorage({
+    destination: (req,file,cb) => {
+        cb(null,'./public');
+    },
+    filename: (req,file,cb) => {
+        cb(null,file.originalname);
+    }
+});
 
-const multerFilter = (req, file, cb) => {
+const multerFilter = (req, file, cb)  => {
     if (file.mimetype.startsWith('image')) {
         cb(null, true)
     } else {
@@ -31,10 +40,10 @@ const multerFilter = (req, file, cb) => {
 
 const upload = multer({
     storage: multerStorage,
-    fileFilter: multerFilter
+    // fileFilter: multerFilter
 });
 
-exports.uploadUserPhoto = upload.single('photo')
+exports.uploadUserPhoto = upload.single('file')
 
 exports.resizeUserPhoto = (req, res, next) => {
     if (!req.file) return next();
@@ -56,12 +65,14 @@ exports.updateUser = factory.updateOne(User);
 exports.deleteUser = factory.deleteOne(User);
 
 exports.addUser = catchAsync(async (req, res, next) => {
+    await storage.uploadFile(req, next);
+    fs.unlinkSync('./public/' + req.file.originalname)
     const newUser = await User.create({
         name: req.body.name,
         email: req.body.email,
         password: req.body.password,
         passwordConfirm: req.body.passwordConfirm,
-        photo: req.body.photo,
+        photo: req.body.path,
         role: req.body.role,
         grade: req.body.grade,
         phoneNumber: req.body.phoneNumber,
@@ -123,14 +134,22 @@ exports.getUser = async (req, res) => {
 }
 
 
-exports.submitFile = async (req, res) => {
+exports.submitFile = async (req, res,next) => {
     try {
-        let file = req.body
-        await User.findByIdAndUpdate(req.user.id, { $push: { files: file } })
-
+        await storage.uploadFile(req, next);
+        fs.unlinkSync('./public/' + req.file.originalname)
+        let body = {
+            category:req.body.category,
+            branch:req.body.branch,
+            type:req.body.fileType,
+            score: parseInt(req.body.score),
+            maxScore: parseInt(req.body.maxScore),
+            path:req.body.path
+        }
+        await User.findByIdAndUpdate(req.user.id, { $push: { files: body } })
         res.status(201).json({
             status: 'success',
-            results: file
+            results: body
         });
     } catch (err) {
         res.status(404).json({
@@ -305,7 +324,15 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
             }
         }
     ]);
-
+    let topStudents = []
+    if (files.length<2){
+        res.status(200).json({
+            status: 'success',
+            data: {
+                topStudents
+            }
+        });    
+    }
     let lastExams = []
     let currentExam = 0
     for (exams of files) {
@@ -326,7 +353,6 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
     let quizzesScores = 0;
     let quizzesMaxScores = 0;
     let totalScores = []
-    let topStudents = []
 
     if (lastExams.length != 0) {
         for (let exams = 0; exams < files.length; exams++) {

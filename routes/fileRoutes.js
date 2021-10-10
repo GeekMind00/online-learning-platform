@@ -2,7 +2,7 @@ const express = require('express');
 const fileController = require('./../controllers/fileController');
 const notificationController = require('../controllers/notificationController');
 const authController = require('./../controllers/authController');
-
+const userController = require('./../controllers/userController')
 
 
 const router = express.Router();
@@ -19,7 +19,7 @@ router
     .route('/')
     .get(fileController.getAllFiles)
     .post(
-        fileController.createFile
+        userController.uploadUserPhoto,fileController.createFile
     );
 
 router

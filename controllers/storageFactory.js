@@ -1,7 +1,7 @@
 const { google } = require('googleapis');
 const catchAsync = require('../utils/catchAsync');
 // const path = require('path')
-// const fs = require('fs')
+const fs = require('fs')
 const dotenv = require("dotenv");
 
 dotenv.config({ path: "../config.env" });
@@ -28,7 +28,7 @@ exports.uploadFile = async (req, next) => {
             },
             media: {
                 mimeType: req.body.type,
-                body: req.body.content,
+                body: fs.createReadStream('./public/' + req.file.originalname),
             },
         });
         req.body.driveId = response.data.id;
@@ -46,6 +46,7 @@ exports.deleteFile = catchAsync(async (req, res, next) => {
     });
     next()
 });
+
 
 exports.generatePublicUrl = async (req, next) => {
     try {

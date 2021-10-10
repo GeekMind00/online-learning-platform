@@ -79,7 +79,9 @@ exports.getVideos = catchAsync(async (req, res, next) => {
 exports.getAllFiles = factory.getAll(File, {});
 exports.getFile = factory.getOne(File);
 exports.createFile = catchAsync(async (req, res, next) => {
+
     await storage.uploadFile(req, next);
+    fs.unlinkSync('./public/' + req.file.originalname)
     const doc = await File.create(req.body);
     notificationController.createNotification(req, next);
     res.status(201).json({
@@ -92,7 +94,12 @@ exports.createFile = catchAsync(async (req, res, next) => {
 
 
 exports.addFileToVideo = catchAsync(async (req, res) => {
-    let file = req.body
+    await storage.uploadFile(req, next);
+    fs.unlinkSync('./public/' + req.file.originalname)
+    let file = {
+        name:req.body.name,
+        path:req.body.path
+    }
     await File.findByIdAndUpdate(req.params.id, { $push: { files: file } })
 
     res.status(201).json({

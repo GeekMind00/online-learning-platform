@@ -173,15 +173,12 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     }
     // 2) Generate the random reset token
     const resetToken = user.createPasswordResetToken();
-    console.log(resetToken)
     await user.save({ validateBeforeSave: false });
 
     // 3) Send it to user's email
     // const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
     try {
-        const resetURL = `${req.protocol}://${req.get(
-            'host'
-        )}/user/resetPassword/${resetToken}`;
+        const resetURL = `${req.protocol}://localhost:4200/newPasscode/${resetToken}`;
         await new Email(user, resetURL).sendPasswordReset()
 
         res.status(201).json({
@@ -216,6 +213,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     if (!user) {
         return next(new AppError('Token is invalid or has expired', 400));
     }
+    console.log(user)
     user.password = req.body.password;
     user.passwordConfirm = req.body.passwordConfirm;
     user.passwordResetToken = undefined;

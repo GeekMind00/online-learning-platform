@@ -16,7 +16,7 @@ router.get('/:branch&:type', userController.getFiles);
 
 router.patch('/updateMyPassword', authController.updatePassword);
 
-router.post('/', userController.submitFile);
+router.post('/',userController.uploadUserPhoto, userController.submitFile);
 
 router.get('/scores/:id&:type', userController.getScores);
 
@@ -30,7 +30,7 @@ router.use(authController.restrictTo('Admin'));
 
 router.patch('/comment', userController.addComment)
 
-router.post('/addUser', userController.addUser);
+router.post('/addUser',userController.uploadUserPhoto, userController.addUser);
 router
     .route('/')
     .delete(userController.deleteUsers);
