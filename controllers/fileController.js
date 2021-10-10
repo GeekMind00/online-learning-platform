@@ -10,6 +10,7 @@ const util = require("util")
 const randomBytes = util.promisify(crypto.randomBytes)
 const dotenv = require("dotenv");
 const storage = require('./../controllers/storageFactory')
+const fs = require('fs')
 
 // dotenv.config({ path: "./config.env" });
 
@@ -78,18 +79,35 @@ exports.getVideos = catchAsync(async (req, res, next) => {
 
 exports.getAllFiles = factory.getAll(File, {});
 exports.getFile = factory.getOne(File);
-exports.createFile = catchAsync(async (req, res, next) => {
-    await storage.uploadFile(req, next);
-    fs.unlinkSync('./public/' + req.file.originalname)
-    const doc = await File.create(req.body);
-    notificationController.createNotification(req, next);
-    res.status(201).json({
+exports.getVideoByName = catchAsync(async (req, res, next) => {
+    const doc = await File.findOne({ name: req.params.name });
+    if (!doc) {
+        return next(new AppError('No document found with that name', 404));
+    }
+    res.status(200).json({
         status: 'success',
         data: {
-            data: doc
+            doc
         }
     });
 });
+exports.createFile = async (req, res, next) => {
+    await storage.uploadFile(req, next);
+    fs.unlinkSync('./public/' + req.file.originalname)
+    try {
+        const doc = await File.create(req.body);
+        notificationController.createNotification(req, next);
+        res.status(201).json({
+            status: 'success',
+            data: {
+                data: doc
+            }
+        });
+    }
+    catch (err) {
+        storage.deleteFile(req, next)
+    }
+};
 
 
 exports.addFileToVideo = catchAsync(async (req, res) => {

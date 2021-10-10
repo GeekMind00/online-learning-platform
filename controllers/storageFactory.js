@@ -40,12 +40,16 @@ exports.uploadFile = async (req, next) => {
 
 };
 
-exports.deleteFile = catchAsync(async (req, res, next) => {
-    await drive.files.delete({
-        fileId: fileId,
-    });
-    next()
-});
+exports.deleteFile = async (req, next) => {
+    try {
+        await drive.files.delete({
+            fileId: req.body.driveId,
+        });
+    }
+    catch (err) {
+        next(err);
+    }
+};
 
 
 exports.generatePublicUrl = async (req, next) => {

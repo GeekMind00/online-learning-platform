@@ -12,14 +12,13 @@ router.use(authController.protect);
 router.route('/assignments/:branch&:grade').get(fileController.getAssignments);
 router.route('/exams/:branch&:grade').get(fileController.getQuizzes);
 router.route('/videos/:branch&:grade').get(fileController.getVideos);
-// router.route('/videos/').get(fileController.addFileToVideo);
-
+router.route('/videos/:name').get(fileController.getVideoByName)
 
 router
     .route('/')
     .get(fileController.getAllFiles)
     .post(
-        userController.uploadUserPhoto,fileController.createFile
+        userController.uploadUserPhoto, fileController.createFile
     );
 
 router
@@ -28,7 +27,6 @@ router
 
 router
     .route('/:id')
-    .get(fileController.getFile)
     .post(fileController.addFileToVideo)
     .patch(
         fileController.updateFile
