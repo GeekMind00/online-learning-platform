@@ -13,16 +13,15 @@ exports.createNotification = catchAsync(async (req, next) => {
 exports.deleteNotification = factory.deleteOne(Notification);
 
 exports.getAllNotifications = catchAsync(async (req, res, next) => {
-        let notifications = await Notification.find();
-        console.log(notifications)
-        notifications.sort(function (notification1,notification2) {
-            return notification2.createdAt - notification1.createdAt 
-        })
-        // SEND RESPONSE
-        res.status(200).json({
-            status: 'success',
-            data: {
-                notifications
-            }
-        });
+    let notifications = await Notification.find();
+    notifications.sort(function (notification1, notification2) {
+        return notification2.createdAt - notification1.createdAt
+    })
+    // SEND RESPONSE
+    res.status(200).json({
+        status: 'success',
+        data: {
+            notifications
+        }
     });
+});

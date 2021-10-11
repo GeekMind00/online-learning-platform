@@ -2,8 +2,6 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-// const { Session } = require('inspector');
-// const { stringify } = require('querystring');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -50,15 +48,12 @@ const userSchema = new mongoose.Schema({
   grade: {
     type: String,
     enum: ['First', 'Second', '']
-    // required: [true,'Please provide your current grade']
   },
   center: {
     type: String
-    // required: [true, 'Please provide your sessions center']
   },
   sessionDate: {
     type: String
-    // required: [true, 'Please provide your session date'],
   },
   files: [
     {
@@ -102,17 +97,13 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
-  // active: {
-  //   type: Boolean,
+
 
   __v: {
     type: Number,
     select: false
   }
 
-  //   default: true,
-  //   select: false
-  // }
 });
 
 userSchema.pre('save', async function (next) {
@@ -131,11 +122,6 @@ userSchema.pre('save', function (next) {
   next();
 });
 
-// userSchema.pre(/^find/, function(next) {
-//   // this points to the current query
-//   this.find({ active: { $ne: false } });
-//   next();
-// });
 
 
 userSchema.methods.correctPassword = async function (

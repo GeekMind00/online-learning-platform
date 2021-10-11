@@ -1,6 +1,5 @@
 const { google } = require('googleapis');
 const catchAsync = require('../utils/catchAsync');
-// const path = require('path')
 const fs = require('fs')
 const dotenv = require("dotenv");
 
@@ -19,7 +18,6 @@ const drive = google.drive({
     auth: oauth2client
 })
 
-// const filePath = path.join(__dirname, 'test.jpg');
 exports.uploadFile = async (req, next) => {
     try {
         const response = await drive.files.create({
