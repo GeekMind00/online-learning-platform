@@ -117,7 +117,12 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 exports.getUser = async (req, res) => {
     try {
-        const id = ObjectId(req.params.id)
+        let id;
+        if (req.params.id!="0"){
+             id = ObjectId(req.params.id)
+        }
+        else 
+             id = ObjectId(req.user.id)
         const user = await User.findById(id).select('-files');
         res.status(200).json({
             status: 'success',
@@ -328,7 +333,7 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
     if (files.length<2){
         res.status(200).json({
             status: 'success',
-            data: {
+            data: { 
                 topStudents
             }
         });    

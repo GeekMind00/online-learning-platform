@@ -27,7 +27,7 @@ router
 
 router
     .route('/:id')
-    .post(fileController.addFileToVideo)
+    .post(userController.uploadUserPhoto,fileController.addFileToVideo)
     .patch(
         fileController.updateFile
     )

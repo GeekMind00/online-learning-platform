@@ -110,7 +110,7 @@ exports.createFile = async (req, res, next) => {
 };
 
 
-exports.addFileToVideo = catchAsync(async (req, res) => {
+exports.addFileToVideo = catchAsync(async (req, res,next) => {
     await storage.uploadFile(req, next);
     fs.unlinkSync('./public/' + req.file.originalname)
     let file = {
