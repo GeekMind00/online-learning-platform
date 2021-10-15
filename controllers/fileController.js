@@ -12,26 +12,12 @@ const dotenv = require("dotenv");
 const storage = require('./../controllers/storageFactory')
 const fs = require('fs')
 
-// dotenv.config({ path: "./config.env" });
-
-// const region = "us-east-2"
-// const bucketName = "osos-bucket"
-// const accessKeyId = process.env.AWS_ACCESS_KEY_ID
-// const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY
-
-// const s3 = new aws.S3({
-//     region,
-//     accessKeyId,
-//     secretAccessKey,
-//     signatureVersion: 'v4'
-// })
-
-
 exports.getAssignments = catchAsync(async (req, res, next) => {
-    if (req.params.grade == "First" || req.params.grade == "undefined")
-        req.user.grade = "First"
-    else
-        req.user.grade = "Second"
+    if ((req.params.grade == "undefined") && (req.user.grade== ""))
+    req.user.grade = "First"
+   else if (req.params.grade != "undefined")
+    req.user.grade = req.params.grade 
+    
 
     const doc = await File.find({ category: 'assignments', branch: req.params.branch, grade: req.user.grade });
 
@@ -45,10 +31,11 @@ exports.getAssignments = catchAsync(async (req, res, next) => {
     });
 });
 exports.getQuizzes = catchAsync(async (req, res, next) => {
-    if (req.params.grade == "First" || req.params.grade == "undefined")
-        req.user.grade = "First"
-    else
-        req.user.grade = "Second"
+    if ((req.params.grade == "undefined") && (req.user.grade== ""))
+    req.user.grade = "First"
+   else if (req.params.grade != "undefined")
+    req.user.grade = req.params.grade 
+    
 
     const doc = await File.find({ category: 'exams', branch: req.params.branch, grade: req.user.grade });
     // SEND RESPONSE
@@ -61,10 +48,10 @@ exports.getQuizzes = catchAsync(async (req, res, next) => {
     });
 });
 exports.getVideos = catchAsync(async (req, res, next) => {
-    if (req.params.grade == "First" || req.params.grade == "undefined")
-        req.user.grade = "First"
-    else
-        req.user.grade = "Second"
+    if ((req.params.grade == "undefined") && (req.user.grade== ""))
+    req.user.grade = "First"
+   else if (req.params.grade != "undefined")
+    req.user.grade = req.params.grade 
 
     const doc = await File.find({ category: 'videos', branch: req.params.branch, grade: req.user.grade });
     // SEND RESPONSE

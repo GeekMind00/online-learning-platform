@@ -22,6 +22,8 @@ const drive = google.drive({
 // const filePath = path.join(__dirname, 'test.jpg');
 exports.uploadFile = async (req, next) => {
     try {
+        if (req.hasOwnProperty('file'))
+        {   
         const response = await drive.files.create({
             requestBody: {
                 name: req.body.name,
@@ -33,6 +35,7 @@ exports.uploadFile = async (req, next) => {
         });
         req.body.driveId = response.data.id;
         await this.generatePublicUrl(req, next);
+        }
     }
     catch (err) {
         next(err);

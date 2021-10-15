@@ -66,6 +66,7 @@ exports.deleteUser = factory.deleteOne(User);
 
 exports.addUser = catchAsync(async (req, res, next) => {
     await storage.uploadFile(req, next);
+    if (req.hasOwnProperty('file'))
     fs.unlinkSync('./public/' + req.file.originalname)
     const newUser = await User.create({
         name: req.body.name,
@@ -300,11 +301,10 @@ exports.getFiles = catchAsync(async (req, res, next) => {
 });
 
 exports.excellentStudents = catchAsync(async (req, res, next) => {
-
-    if (req.params.grade == "First" || req.params.grade == "undefined")
+    if ((req.params.grade == "undefined") && (req.user.grade== ""))
      req.user.grade = "First"
-    else 
-     req.user.grade = "Second" 
+    else if (req.params.grade != "undefined")
+     req.user.grade = req.params.grade 
     const files = await User.aggregate([
         {
             $match: {
@@ -336,8 +336,8 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
             data: { 
                 topStudents
             }
-        });    
-    }
+        });
+    }else{
     let lastExams = []
     let currentExam = 0
     for (exams of files) {
@@ -362,7 +362,7 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
     if (lastExams.length != 0) {
         for (let exams = 0; exams < files.length; exams++) {
             for (let cnt = 0; cnt < 12 && cnt < files[exams].files.length; cnt++) {
-                file = files[exams].files[lastExams[exams] - cnt]
+                let file = files[exams].files[lastExams[exams] - cnt]
 
                 if (file.score != null && file.maxScore != null) {
                     if (file.category.includes('exam') && parseInt(file.category[5]) == currentExam) {
@@ -417,6 +417,7 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
             topStudents
         }
     });
+    }
 });
 
 exports.addComment = catchAsync(async (req, res, next) => {
