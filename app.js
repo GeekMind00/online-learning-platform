@@ -37,14 +37,8 @@ app.use(xss());
 
 app.use(hpp());
 
-// app.use(express.static(path.join(__dirname,'osos-website/dist/osos-website')));
-
 app.use('/user', userRouter);
 app.use('/files', fileRouter);
 app.use('/notifications', notificationRouter);
-
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname,'osos-website/dist/osos-website/index.html'));
-// });
 
 module.exports = app;

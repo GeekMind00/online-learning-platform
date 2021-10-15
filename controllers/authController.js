@@ -33,9 +33,6 @@ const createSendToken = (user, statusCode, req, res) => {
     res.status(statusCode).json({
         status: 'success',
         token,
-        // data: {
-        //     user
-        // }
     });
 
 }
@@ -116,11 +113,6 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     // GRANT ACCESS TO PROTECTED ROUTE
     req.user = currentUser;
-    // console.log(req.params)
-    // if (req.params.grade == undefined)
-    //     req.user.grade = "First"
-    // else if (req.params.grade == "Second")
-    //     req.user.grade = "Second"
     next();
 });
 
@@ -144,8 +136,6 @@ exports.isLoggedIn = async (req, res, next) => {
                 return next();
             }
 
-            // THERE IS A LOGGED IN USER
-            // res.locals.user = currentUser;
             return next();
         } catch (err) {
             return next();
@@ -176,7 +166,6 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
     await user.save({ validateBeforeSave: false });
 
     // 3) Send it to user's email
-    // const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
     try {
         const resetURL = `${req.protocol}://localhost:4200/newPasscode/${resetToken}`;
         await new Email(user, resetURL).sendPasswordReset()
@@ -218,7 +207,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
-    
+
     // 3) Update changedPasswordAt property for the user
     // 4) Log the user in, send JWT
     createSendToken(user, 200, req, res)
@@ -237,7 +226,6 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     user.password = req.body.password;
     user.passwordConfirm = req.body.passwordConfirm;
     await user.save();
-    // User.findByIdAndUpdate will NOT work as intended!
 
     // 4) Log user in, send JWT
     createSendToken(user, 200, req, res)

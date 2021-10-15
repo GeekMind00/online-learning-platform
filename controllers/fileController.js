@@ -24,7 +24,6 @@ exports.getAssignments = catchAsync(async (req, res, next) => {
     // SEND RESPONSE
     res.status(200).json({
         status: 'success',
-        // results: doc.length,
         data: {
             doc
         }
@@ -41,7 +40,6 @@ exports.getQuizzes = catchAsync(async (req, res, next) => {
     // SEND RESPONSE
     res.status(200).json({
         status: 'success',
-        // results: doc.length,
         data: {
             doc
         }
@@ -57,7 +55,6 @@ exports.getVideos = catchAsync(async (req, res, next) => {
     // SEND RESPONSE
     res.status(200).json({
         status: 'success',
-        // results: doc.length,
         data: {
             doc
         }
@@ -82,6 +79,7 @@ exports.createFile = async (req, res, next) => {
     await storage.uploadFile(req, next);
     fs.unlinkSync('./public/' + req.file.originalname)
     try {
+        req.body.name = req.body.name.slice(0, -4)
         const doc = await File.create(req.body);
         notificationController.createNotification(req, next);
         res.status(201).json({
@@ -97,7 +95,7 @@ exports.createFile = async (req, res, next) => {
 };
 
 
-exports.addFileToVideo = catchAsync(async (req, res,next) => {
+exports.addFileToVideo = catchAsync(async (req, res, next) => {
     await storage.uploadFile(req, next);
     fs.unlinkSync('./public/' + req.file.originalname)
     let file = {
