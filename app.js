@@ -16,7 +16,13 @@ const app = express();
 app.use(cors())
 
 // 1) MIDDLEWARES
-app.use(helmet())
+app.use(helmet.contentSecurityPolicy({
+    useDefaults:true,
+    directives:{
+        "img-src":["'self'","https:"],
+        "frame-src":["'self'","https:"]
+    }
+}))
 
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
@@ -40,5 +46,12 @@ app.use(hpp());
 app.use('/user', userRouter);
 app.use('/files', fileRouter);
 app.use('/notifications', notificationRouter);
+
+app.use(express.static(process.cwd() + "/online-learning-platform-front/dist/osos-website"));
+
+app.get('*', (req, res) => {
+    res.sendFile(process.cwd() + "/online-learning-platform-front/dist/osos-website/index.html");
+});
+  
 
 module.exports = app;

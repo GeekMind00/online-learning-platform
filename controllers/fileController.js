@@ -132,4 +132,4 @@ exports.generateUploadURL =
                 uploadURL
             }
         });
-    });
+});
