@@ -20,7 +20,9 @@ app.use(helmet.contentSecurityPolicy({
     useDefaults:true,
     directives:{
         "img-src":["'self'","https:"],
-        "frame-src":["'self'","https:"]
+        "frame-src":["'self'","https:"],
+        "default-src":["'self'","http"],
+        "script-src-attr":["https:"]
     }
 }))
 

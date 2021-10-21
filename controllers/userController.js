@@ -278,7 +278,7 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
             }
         }, {
             $match: {
-                "files.type": "exam"
+                "files.type": "exams"
             }
         }, {
             $group: {
@@ -329,7 +329,7 @@ exports.excellentStudents = catchAsync(async (req, res, next) => {
                         examsScores += file.score
                         examsMaxScores += file.maxScore
                     }
-                    else if (file.category.includes('quiz') && (parseInt(file.category[4]) == currentExam * 2 || parseInt(file.category[4]) == currentExam * 2 - 1)) {
+                    else if (file.category.includes('quiz') && (parseInt(file.category[5]) == currentExam * 2 || parseInt(file.category[5]) == currentExam * 2 - 1)) {
                         quizzesScores += file.score
                         quizzesMaxScores += file.maxScore
                     }

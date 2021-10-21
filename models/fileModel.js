@@ -5,7 +5,6 @@ const fileSchema = new mongoose.Schema(
         name: {
             type: String,
             required: [true, 'A file must have a name'],
-            unique: true,
             trim: true,
         },
         grade: {
