@@ -64,7 +64,7 @@ exports.getVideos = catchAsync(async (req, res, next) => {
 exports.getAllFiles = factory.getAll(File, {});
 exports.getFile = factory.getOne(File);
 exports.getVideoByName = catchAsync(async (req, res, next) => {
-    const doc = await File.findOne({ name: req.params.name });
+    const doc = await File.findOne({ id: req.params.id });
     if (!doc) {
         return next(new AppError('No document found with that name', 404));
     }

@@ -21,18 +21,18 @@ const drive = google.drive({
 exports.uploadFile = async (req, next) => {
     try {
         if (req.hasOwnProperty('file'))
-        {   
-        const response = await drive.files.create({
-            requestBody: {
-                name: req.body.name,
-            },
-            media: {
-                mimeType: req.body.type,
-                body: fs.createReadStream('./public/' + req.file.originalname),
-            },
-        });
-        req.body.driveId = response.data.id;
-        await this.generatePublicUrl(req, next);
+        {
+            const response = await drive.files.create({
+                requestBody: {
+                    name: req.body.name,
+                },
+                media: {
+                    mimeType: req.body.type,
+                    body: fs.createReadStream('./public/' + req.file.originalname),
+                },
+            });
+            req.body.driveId = response.data.id;
+            await this.generatePublicUrl(req, next);
         }
     }
     catch (err) {
