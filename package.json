@@ -34,6 +34,7 @@
         "helmet": "^4.6.0",
         "hpp": "^0.2.3",
         "html-to-text": "^8.0.0",
+        "jimp": "^0.22.10",
         "jsonwebtoken": "^8.5.1",
         "mongoose": "^5.13.9",
         "morgan": "^1.10.0",
@@ -44,8 +45,5 @@
         "sharp": "^0.29.1",
         "validator": "^13.6.0",
         "xss-clean": "^0.1.1"
-    },
-    "devDependencies": {
-
     }
 }

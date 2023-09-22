@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const factory = require('./handlerFactory');
 const multer = require('multer');
 const sharp = require('sharp');
+const jimp = require('jimp');
+
 const storage = require('./../controllers/storageFactory')
 const fs = require('fs')
 
@@ -38,12 +40,12 @@ exports.resizeUserPhoto = (req, res, next) => {
     if (!req.file) return next();
 
     req.file.filename = `user-${req.params.id}-${Date.now()}.jpeg`;
-
-    sharp(req.file.buffer)
-        .resize(250, 250)
-        .toFormat('jpeg')
-        .jpeg({ quality: 90 })
-        .toFile(`public/${req.file.filename}`);
+    jimp.read(req.file.buffer).resize(250,250).toFormat(250,250).jpeg({ quality: 90 }).toFile(`public/${req.file.filename}`);
+    // sharp(req.file.buffer)
+    //     .resize(250, 250)
+    //     .toFormat('jpeg')
+    //     .jpeg({ quality: 90 })
+    //     .toFile(`public/${req.file.filename}`);
 
     next();
 };

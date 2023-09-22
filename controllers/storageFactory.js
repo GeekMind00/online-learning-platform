@@ -31,20 +31,20 @@ driveFoldersIds = {"First/algebra/exams":"1xVMdr2xGctSJhEVe_xD3BCyfyTJuKij7","Fi
 examsFoldersId = {table:[]}               
                    
 exports.uploadFile = async (req, next) => {
-    var filename = req.file.originalname
-    var data = fs.readFileSync('examsFoldersId.json')
-    this.examsFoldersId = JSON.parse(data)
-    folderId = driveFoldersIds[this.driveFolderPath(req)]
-    if (req.body.category == "exams"){
-        folderId = await this.createFolder(req,folderId)
-    }
-    else if (req.body.category != "videos" && req.body.category != "assignments"){
-        folderId = await this.getFolderId(req,req.body.category)
-        filename = req.body.name + ".pdf"
-    } 
     try {  
         if (req.hasOwnProperty('file'))
         { 
+            var filename = req.file.originalname
+            var data = fs.readFileSync('examsFoldersId.json')
+            this.examsFoldersId = JSON.parse(data)
+            folderId = driveFoldersIds[this.driveFolderPath(req)]
+            if (req.body.category == "exams"){
+                folderId = await this.createFolder(req,folderId)
+            }
+            else if (req.body.category != "videos" && req.body.category != "assignments"){
+                folderId = await this.getFolderId(req,req.body.category)
+                filename = req.body.name + ".pdf"
+            } 
             const response = await drive.files.create({
                 requestBody: {
                     name: filename,
@@ -108,7 +108,7 @@ exports.createFolder = async (req, id) => {
     name: folderName,
     mimeType: 'application/vnd.google-apps.folder',
     parents: [id]
-  };
+  }; 
   try {
     const folder = await drive.files.create({
       resource: fileMetadata,

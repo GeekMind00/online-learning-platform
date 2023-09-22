@@ -4,7 +4,7 @@ const notificationController = require('../controllers/notificationController');
 const router = express.Router();
 
 router
-    .route('/')
+    .route('/get')
     .get(notificationController.getAllNotifications)
 
 router
