@@ -4,7 +4,7 @@ const catchAsync = require('./../utils/catchAsync');
 const mongoose = require('mongoose');
 const factory = require('./handlerFactory');
 const multer = require('multer');
-const sharp = require('sharp');
+// const sharp = require('sharp');
 const jimp = require('jimp');
 
 const storage = require('./../controllers/storageFactory')

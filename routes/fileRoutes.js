@@ -7,12 +7,14 @@ const userController = require('./../controllers/userController')
 
 const router = express.Router();
 
+router.route('/verify/:code').get(fileController.verifyCode);
+
 router.use(authController.protect);
 
 router.route('/assignments/:branch&:grade').get(fileController.getAssignments);
 router.route('/exams/:branch&:grade').get(fileController.getQuizzes);
 router.route('/videos/:branch&:grade').get(fileController.getVideos);
-router.route('/videos/:id').get(fileController.getFile)
+router.route('/videos/:id').get(fileController.getFile);
 
 router
     .route('/')

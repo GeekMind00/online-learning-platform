@@ -3,14 +3,14 @@ const Notification = require('../models/notificationModel');
 const catchAsync = require('../utils/catchAsync');
 const notificationController = require('../controllers/notificationController');
 const factory = require('./handlerFactory');
-const authController = require('./../controllers/authController');
-const aws = require('aws-sdk');
 const crypto = require('crypto');
 const util = require("util")
 const randomBytes = util.promisify(crypto.randomBytes)
-const dotenv = require("dotenv");
 const storage = require('./../controllers/storageFactory')
 const fs = require('fs')
+const videoCodes = require('../videoCodes.json');
+
+
 
 exports.getAssignments = catchAsync(async (req, res, next) => {
     if ((req.params.grade == "undefined") && (req.user.grade== ""))
@@ -132,4 +132,20 @@ exports.generateUploadURL =
                 uploadURL
             }
         });
+});
+
+exports.verifyCode = catchAsync(async (req, res, next) => {
+    code = req.params.code;
+    if (videoCodes[code] == 1){
+        console.log("hi")
+        res.status(200).json({
+            status: 'success',
+        });
+    }
+    else{
+        res.status(400).json({
+            status: 'failed',
+        });
+    }
+
 });

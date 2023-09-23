@@ -49,10 +49,10 @@ app.use('/user', userRouter);
 app.use('/files', fileRouter);
 app.use('/notifications', notificationRouter);
 
-app.use(express.static(process.cwd() + "/online-learning-platform-front/dist/osos-website"));
+app.use(express.static(path.resolve(process.cwd(), '..') + "/online-learning-platform-front/dist/osos-website"));
 
 app.get('*', (req, res) => {
-    res.sendFile(process.cwd() + "/online-learning-platform-front/dist/osos-website/index.html");
+    res.sendFile(path.resolve(process.cwd(), '..') + "/online-learning-platform-front/dist/osos-website/index.html");
 });
   
 

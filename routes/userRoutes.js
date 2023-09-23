@@ -37,7 +37,7 @@ router
 
 router
     .route('/:id')
-    .patch(userController.uploadUserPhoto, userController.resizeUserPhoto, userController.updateUser)
+    .patch(userController.updateUser)
     .delete(userController.deleteUser);
 
 router.use(authController.restrictTo('Admin', 'Moderator'));
